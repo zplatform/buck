@@ -20,6 +20,7 @@ package com.facebook.buck.apple;
 public enum AppleBundleExtension {
   APP,
   FRAMEWORK,
+  XCFRAMEWORK,
   APPEX,
   PLUGIN,
   BUNDLE,
@@ -35,6 +36,8 @@ public enum AppleBundleExtension {
         return "app";
       case FRAMEWORK:
         return "framework";
+      case XCFRAMEWORK:
+        return "xcframework";
       case APPEX:
         return "appex";
       case PLUGIN:

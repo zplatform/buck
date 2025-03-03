@@ -80,6 +80,7 @@ public final class FileTypes {
           .put("frag", "sourcecode.glsl")
           .put("fragment", "sourcecode.glsl")
           .put("framework", "wrapper.framework")
+          .put("xcframework", "wrapper.xcframework")
           .put("fs", "sourcecode.glsl")
           .put("fsh", "sourcecode.glsl")
           .put("geom", "sourcecode.glsl")
