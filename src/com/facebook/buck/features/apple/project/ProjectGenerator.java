@@ -3994,6 +3994,10 @@ public class ProjectGenerator {
               Optional<TargetNode<PrebuiltAppleFrameworkDescriptionArg>> prebuilt =
                   TargetNodes.castArg(input, PrebuiltAppleFrameworkDescriptionArg.class);
               if (prebuilt.isPresent()) {
+                if (!prebuilt.get().getConstructorArg().getLinkable().orElse(true)) {
+                  return prebuilt.get().getConstructorArg().getLibraries();
+                }
+
                 return Iterables.concat(
                     prebuilt.get().getConstructorArg().getFrameworks(),
                     prebuilt.get().getConstructorArg().getLibraries(),
