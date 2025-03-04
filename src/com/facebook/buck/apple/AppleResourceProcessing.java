@@ -228,7 +228,7 @@ public class AppleResourceProcessing {
     // are copied over).
     boolean shouldCopySwiftStdlib =
         !bundleExtension.equals(AppleBundleExtension.APPEX.toFileExtension())
-            && (!bundleExtension.equals(AppleBundleExtension.FRAMEWORK.toFileExtension())
+            && (!(bundleExtension.equals(AppleBundleExtension.FRAMEWORK.toFileExtension()) || bundleExtension.equals(AppleBundleExtension.XCFRAMEWORK.toFileExtension()))
             && !isAppClip
                 || copySwiftStdlibToFrameworks);
 

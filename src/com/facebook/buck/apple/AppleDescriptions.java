@@ -692,7 +692,8 @@ public class AppleDescriptions {
 
     AppleBundleDestinations destinations;
 
-    if (extension.isLeft() && extension.getLeft().equals(AppleBundleExtension.FRAMEWORK)) {
+    if (extension.isLeft() && (extension.getLeft().equals(AppleBundleExtension.FRAMEWORK) 
+      || extension.getLeft().equals(AppleBundleExtension.XCFRAMEWORK))) {
       destinations =
           AppleBundleDestinations.platformFrameworkDestinations(
               appleCxxPlatform.getAppleSdk().getApplePlatform());
@@ -1115,6 +1116,9 @@ public class AppleDescriptions {
 
           extensionBundlePaths.put(sourcePath, destinationPath.toString());
         } else if (AppleBundleExtension.FRAMEWORK
+            .toFileExtension()
+            .equals(appleBundle.getExtension()) 
+            || AppleBundleExtension.XCFRAMEWORK
             .toFileExtension()
             .equals(appleBundle.getExtension())) {
           extensionBundlePaths.put(sourcePath, destinations.getFrameworksPath().toString());

@@ -242,7 +242,7 @@ public class ProjectGenerator {
               CxxLibraryDescription.class);
 
   private static final ImmutableSet<AppleBundleExtension> APPLE_NATIVE_BUNDLE_EXTENSIONS =
-      ImmutableSet.of(AppleBundleExtension.APP, AppleBundleExtension.FRAMEWORK);
+      ImmutableSet.of(AppleBundleExtension.APP, AppleBundleExtension.FRAMEWORK, AppleBundleExtension.XCFRAMEWORK);
 
   private static final FileAttribute<?> READ_ONLY_FILE_ATTRIBUTE =
       PosixFilePermissions.asFileAttribute(
@@ -2381,6 +2381,7 @@ public class ProjectGenerator {
                               return true;
 
                             case FRAMEWORK:
+                            case XCFRAMEWORK:
                             case DSYM:
                               return false;
                           }
@@ -3528,7 +3529,8 @@ public class ProjectGenerator {
 
       PBXFileReference fileReference = getLibraryFileReference(targetNode);
       PBXBuildFile buildFile = new PBXBuildFile(fileReference);
-      if (fileReference.getExplicitFileType().equals(Optional.of("wrapper.framework"))) {
+      if (fileReference.getExplicitFileType().equals(Optional.of("wrapper.framework"))
+        || fileReference.getExplicitFileType().equals(Optional.of("wrapper.xcframework"))) {
         UnflavoredBuildTarget buildTarget = targetNode.getBuildTarget().getUnflavoredBuildTarget();
         if (frameworkTargets.contains(buildTarget)) {
           continue;
@@ -3790,7 +3792,7 @@ public class ProjectGenerator {
         targetGraph,
         targetNode,
         ImmutableSet.of(AppleLibraryDescription.class, CxxLibraryDescription.class),
-        ImmutableSet.of(AppleBundleExtension.FRAMEWORK));
+        ImmutableSet.of(AppleBundleExtension.FRAMEWORK, AppleBundleExtension.XCFRAMEWORK));
   }
 
   private ImmutableSet<Path> collectRecursiveHeaderSearchPaths(
@@ -3992,6 +3994,10 @@ public class ProjectGenerator {
               Optional<TargetNode<PrebuiltAppleFrameworkDescriptionArg>> prebuilt =
                   TargetNodes.castArg(input, PrebuiltAppleFrameworkDescriptionArg.class);
               if (prebuilt.isPresent()) {
+                if (!prebuilt.get().getConstructorArg().getLinkable().orElse(true)) {
+                  return prebuilt.get().getConstructorArg().getLibraries();
+                }
+
                 return Iterables.concat(
                     prebuilt.get().getConstructorArg().getFrameworks(),
                     prebuilt.get().getConstructorArg().getLibraries(),
@@ -4736,7 +4742,7 @@ public class ProjectGenerator {
           if (productType.isPresent()) {
             return productType.get();
           }
-        } else if (extension == AppleBundleExtension.FRAMEWORK) {
+        } else if (extension == AppleBundleExtension.FRAMEWORK || extension == AppleBundleExtension.XCFRAMEWORK) {
           return ProductTypes.STATIC_FRAMEWORK;
         }
       } else if (binaryNode.getDescription() instanceof AppleBinaryDescription) {
@@ -4765,7 +4771,7 @@ public class ProjectGenerator {
   }
 
   private static boolean isFrameworkBundle(HasAppleBundleFields arg) {
-    return hasExtension(arg, AppleBundleExtension.FRAMEWORK);
+    return hasExtension(arg, AppleBundleExtension.FRAMEWORK) || hasExtension(arg, AppleBundleExtension.XCFRAMEWORK);
   }
 
   private static boolean isApp(HasAppleBundleFields arg) {

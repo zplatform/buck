@@ -103,6 +103,8 @@ public class AppleBundle extends AbstractBuildRule
   public static final String CODE_SIGN_ENTITLEMENTS = "CODE_SIGN_ENTITLEMENTS";
   private static final String FRAMEWORK_EXTENSION =
       AppleBundleExtension.FRAMEWORK.toFileExtension();
+  private static final String XCFRAMEWORK_EXTENSION =
+      AppleBundleExtension.XCFRAMEWORK.toFileExtension();
   private static final String PP_DRY_RUN_RESULT_FILE = "BUCK_pp_dry_run.plist";
   private static final String CODE_SIGN_DRY_RUN_ARGS_FILE = "BUCK_code_sign_args.plist";
   private static final String CODE_SIGN_DRY_RUN_ENTITLEMENTS_FILE =
@@ -908,7 +910,7 @@ public class AppleBundle extends AbstractBuildRule
               srcPath,
               destPath,
               CopyStep.DirectoryMode.DIRECTORY_AND_CONTENTS));
-      if (srcPath.toString().endsWith("." + FRAMEWORK_EXTENSION)) {
+      if (srcPath.toString().endsWith("." + FRAMEWORK_EXTENSION) || srcPath.toString().endsWith("." + XCFRAMEWORK_EXTENSION)) {
         codeSignOnCopyPathsBuilder.add(destPath.resolve(srcPath.getFileName()));
       }
     }
@@ -1052,7 +1054,7 @@ public class AppleBundle extends AbstractBuildRule
   private boolean needCodeSign() {
     return binary.isPresent()
         && ApplePlatform.needsCodeSign(platform.getName())
-        && !extension.equals(FRAMEWORK_EXTENSION);
+        && !(extension.equals(FRAMEWORK_EXTENSION) || extension.equals(XCFRAMEWORK_EXTENSION));
   }
 
   @Override
