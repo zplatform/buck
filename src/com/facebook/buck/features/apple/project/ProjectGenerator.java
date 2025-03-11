@@ -1633,6 +1633,14 @@ public class ProjectGenerator {
       extraSettingsBuilder
           .put("TARGET_NAME", buildTargetName)
           .put("SRCROOT", srcRoot);
+
+      for (BuildTarget depTarget : buildTargetNode.getTotalDeps()) {
+        Object depArg = targetGraph.get(depTarget).getConstructorArg();
+        if (depArg instanceof HasAppleBundleFields) {
+          addPBXTargetDependency(target, depTarget);
+        }
+      }
+      
       if (productType == ProductTypes.UI_TEST && isFocusedOnTarget) {
         if (bundleLoaderNode.isPresent()) {
           BuildTarget testTarget = bundleLoaderNode.get().getBuildTarget();
