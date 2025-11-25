@@ -135,6 +135,16 @@ non-expired profile that matches the bundle id and entitlements.
   {/param}
 {/call}
 
+{call buck.arg}
+  {param name: 'is_extension_kit' /}
+  {param default : 'None' /}
+  {param desc}
+  If set to <code>True</code>, marks this app extension as an ExtensionKit extension. ExtensionKit extensions
+  will be placed in the <code>PlugIns/ExtensionKit Extensions</code> directory instead of the default
+  <code>PlugIns</code> directory. This is useful for macOS extensions that use ExtensionKit framework.
+  {/param}
+{/call}
+
 {/param} // args
 
 {param examples}
@@ -181,6 +191,25 @@ apple_bundle(
   deps = [':DemoIBAppResources'],
   extension = 'app',
   ibtool_flags = ["--minimum-deployment-target", "9.0"],
+  info_plist = 'Info.plist',
+)
+</pre>{/literal}
+
+{literal}<pre class="prettyprint lang-py">
+# macOS app with ExtensionKit extension
+apple_bundle(
+  name = 'ExtensionKitExtension',
+  binary = ':ExtensionKitExtensionBinary',
+  extension = 'appex',
+  is_extension_kit = True,
+  info_plist = 'ExtensionKitExtension/Info.plist',
+)
+
+apple_bundle(
+  name = 'MyApp',
+  binary = ':MyAppBinary',
+  deps = [':ExtensionKitExtension'],
+  extension = 'app',
   info_plist = 'Info.plist',
 )
 </pre>{/literal}

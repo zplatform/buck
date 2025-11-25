@@ -676,7 +676,8 @@ public class AppleDescriptions {
       boolean cacheStrips,
       boolean useEntitlementsWhenAdhocCodeSigning,
       Predicate<BuildTarget> filter,
-      Optional<Boolean> isAppClip) {
+      Optional<Boolean> isAppClip,
+      Optional<Boolean> isExtensionKit) {
     AppleCxxPlatform appleCxxPlatform =
         ApplePlatforms.getAppleCxxPlatformForBuildTarget(
             graphBuilder,
@@ -920,7 +921,8 @@ public class AppleDescriptions {
         copySwiftStdlibToFrameworks,
         useLipoThin,
         useEntitlementsWhenAdhocCodeSigning,
-        isAppClip);
+        isAppClip,
+        isExtensionKit);
   }
 
   /**
@@ -1103,7 +1105,9 @@ public class AppleDescriptions {
           } else if (appleBundle.isLegacyWatchApp()) {
             destinationPath = destinations.getResourcesPath();
           }
-          else if (appleBundle.getIsAppClip()) {
+          else if (appleBundle.getIsExtensionKit()) {
+            destinationPath = destinations.getExtensionKitExtensionsPath();
+          } else if (appleBundle.getIsAppClip()) {
             destinationPath = destinations.getAppClipsPath();
           } else {
             destinationPath = destinations.getPlugInsPath();

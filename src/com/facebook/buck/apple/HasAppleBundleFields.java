@@ -33,6 +33,8 @@ public interface HasAppleBundleFields {
 
   Optional<Boolean> getIsAppClip();
 
+  Optional<Boolean> getIsExtensionKit();
+
   ImmutableMap<String, String> getInfoPlistSubstitutions();
 
   @Value.Default
