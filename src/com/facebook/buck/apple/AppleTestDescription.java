@@ -377,6 +377,7 @@ public class AppleTestDescription
                         Predicates.alwaysTrue(),
                         Optional.empty(),
                         Optional.empty(),
+                        Optional.empty(),
                         Optional.empty())));
 
     Optional<SourcePath> xctool =

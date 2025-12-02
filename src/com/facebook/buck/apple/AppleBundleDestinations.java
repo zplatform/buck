@@ -45,6 +45,9 @@ abstract class AppleBundleDestinations implements AddsToRuleKey {
   public abstract Path getPlugInsPath();
 
   @AddToRuleKey(stringify = true)
+  public abstract Path getExtensionKitPath();
+
+  @AddToRuleKey(stringify = true)
   public abstract Path getWatchAppPath();
 
   @AddToRuleKey(stringify = true)
@@ -68,6 +71,7 @@ abstract class AppleBundleDestinations implements AddsToRuleKey {
           OSX_CONTENTS_PATH,
           OSX_CONTENTS_PATH.resolve("Frameworks"),
           OSX_CONTENTS_PATH.resolve("PlugIns"),
+          OSX_CONTENTS_PATH.resolve("Extensions"),
           OSX_CONTENTS_PATH,
           OSX_CONTENTS_PATH,
           OSX_CONTENTS_PATH,
@@ -83,6 +87,7 @@ abstract class AppleBundleDestinations implements AddsToRuleKey {
           OSX_FRAMEWORK_CONTENTS_PATH,
           OSX_FRAMEWORK_CONTENTS_PATH.resolve("Frameworks"),
           OSX_FRAMEWORK_CONTENTS_PATH,
+          OSX_FRAMEWORK_CONTENTS_PATH.resolve("Extensions"),
           OSX_FRAMEWORK_CONTENTS_PATH,
           OSX_FRAMEWORK_CONTENTS_PATH.resolve("Headers"),
           OSX_FRAMEWORK_CONTENTS_PATH.resolve("Modules"),
@@ -98,6 +103,7 @@ abstract class AppleBundleDestinations implements AddsToRuleKey {
           IOS_CONTENTS_PATH.resolve("AppClips"),
           IOS_CONTENTS_PATH.resolve("Frameworks"),
           IOS_CONTENTS_PATH.resolve("PlugIns"),
+          IOS_CONTENTS_PATH.resolve("Extensions"),
           IOS_CONTENTS_PATH.resolve("Watch"),
           IOS_CONTENTS_PATH,
           IOS_CONTENTS_PATH,
@@ -113,6 +119,7 @@ abstract class AppleBundleDestinations implements AddsToRuleKey {
           IOS_FRAMEWORK_CONTENTS_PATH,
           IOS_FRAMEWORK_CONTENTS_PATH.resolve("Frameworks"),
           IOS_FRAMEWORK_CONTENTS_PATH,
+          IOS_FRAMEWORK_CONTENTS_PATH.resolve("Extensions"),
           IOS_FRAMEWORK_CONTENTS_PATH,
           IOS_FRAMEWORK_CONTENTS_PATH.resolve("Headers"),
           IOS_FRAMEWORK_CONTENTS_PATH.resolve("Modules"),

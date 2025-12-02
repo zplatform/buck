@@ -23,6 +23,7 @@ public enum AppleBundleExtension {
   XCFRAMEWORK,
   APPEX,
   PLUGIN,
+  EXTENSION_KIT,
   BUNDLE,
   XCTEST,
   DSYM,
@@ -42,6 +43,8 @@ public enum AppleBundleExtension {
         return "appex";
       case PLUGIN:
         return "plugin";
+      case EXTENSION_KIT:
+        return "appex";
       case BUNDLE:
         return "bundle";
       case XCTEST:

@@ -195,6 +195,7 @@ public class AppleBundle extends AbstractBuildRule
   private final Optional<Boolean> isAppClip;
   private final Optional<Boolean> copyFiles;
   private final Optional<String> groupName;
+  private final Optional<Boolean> isExtensionKit;
 
   AppleBundle(
       BuildTarget buildTarget,
@@ -232,7 +233,9 @@ public class AppleBundle extends AbstractBuildRule
       boolean useEntitlementsWhenAdhocCodeSigning,
       Optional<Boolean> isAppClip,
       Optional<Boolean> copyFiles,
-      Optional<String> groupName) {
+      Optional<String> groupName,
+      Optional<Boolean> isExtensionKit) {
+        
     super(buildTarget, projectFilesystem);
     this.buildRuleParams = params;
     this.extension =
@@ -312,6 +315,7 @@ public class AppleBundle extends AbstractBuildRule
     this.isAppClip = isAppClip;
     this.copyFiles = copyFiles;
     this.groupName = groupName;
+    this.isExtensionKit = isExtensionKit;
   }
 
   public static String getBinaryName(BuildTarget buildTarget, Optional<String> productName) {
@@ -1007,6 +1011,10 @@ public class AppleBundle extends AbstractBuildRule
 
   public Boolean getIsAppClip() {
     return isAppClip.orElse(false);
+  }
+
+  public Boolean getIsExtensionKit() {
+    return isExtensionKit.orElse(false);
   }
 
   public Boolean getCopyFiles() {

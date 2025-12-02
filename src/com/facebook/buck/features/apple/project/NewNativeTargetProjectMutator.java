@@ -667,6 +667,8 @@ class NewNativeTargetProjectMutator {
         return PBXCopyFilesBuildPhase.Destination.RESOURCES;
       case PLUGINS:
         return PBXCopyFilesBuildPhase.Destination.PLUGINS;
+      case EXTENSION_KIT:
+        return PBXCopyFilesBuildPhase.Destination.EXTENSION_KIT;
       case XPCSERVICES:
         return PBXCopyFilesBuildPhase.Destination.XPC;
       default:

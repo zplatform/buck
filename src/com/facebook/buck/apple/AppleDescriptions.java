@@ -678,7 +678,8 @@ public class AppleDescriptions {
       Predicate<BuildTarget> filter,
       Optional<Boolean> isAppClip,
       Optional<Boolean> copyFiles,
-      Optional<String> groupName) {
+      Optional<String> groupName,
+      Optional<Boolean> isExtensionKit) {
     AppleCxxPlatform appleCxxPlatform =
         ApplePlatforms.getAppleCxxPlatformForBuildTarget(
             graphBuilder,
@@ -925,7 +926,8 @@ public class AppleDescriptions {
         useEntitlementsWhenAdhocCodeSigning,
         isAppClip,
         copyFiles,
-        groupName);
+        groupName,
+        isExtensionKit);
   }
 
   /**
@@ -1110,6 +1112,8 @@ public class AppleDescriptions {
           }
           else if (appleBundle.getIsAppClip()) {
             destinationPath = destinations.getAppClipsPath();
+          } else if (appleBundle.getIsExtensionKit()) {
+            destinationPath = destinations.getExtensionKitPath();
           } else {
             destinationPath = destinations.getPlugInsPath();
           }
@@ -1131,7 +1135,11 @@ public class AppleDescriptions {
         } else if (AppleBundleExtension.PLUGIN
             .toFileExtension()
             .equals(appleBundle.getExtension())) {
-          extensionBundlePaths.put(sourcePath, destinations.getPlugInsPath().toString());
+          if (appleBundle.getIsExtensionKit()) {
+            extensionBundlePaths.put(sourcePath, destinations.getExtensionKitPath().toString());
+          } else {
+            extensionBundlePaths.put(sourcePath, destinations.getPlugInsPath().toString());
+          }
         } else if (AppleBundleExtension.PREFPANE
             .toFileExtension()
             .equals(appleBundle.getExtension())) {

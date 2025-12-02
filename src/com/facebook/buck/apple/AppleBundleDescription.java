@@ -225,7 +225,8 @@ public class AppleBundleDescription
         resourceFilter,
         args.getIsAppClip(),
         args.getCopyFiles(),
-        args.getGroupName());
+        args.getGroupName(),
+        args.getIsExtensionKit());
   }
 
   /**
@@ -451,6 +452,8 @@ public class AppleBundleDescription
     Optional<Boolean> getCopyFiles();
 
     Optional<String> getGroupName();
+
+    Optional<Boolean> getIsExtensionKit();
 
     @Override
     @Hint(isDep = false)

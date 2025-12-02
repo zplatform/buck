@@ -1724,11 +1724,13 @@ public class XcodeNativeTargetGenerator {
                             case PREFPANE:
                             case XPC:
                             case QLGENERATOR:
+                            case EXTENSION_KIT:
                               // All of the above bundles can have loaders which do not contain
                               // a Swift runtime, so it must get bundled to ensure they run.
                               return true;
 
                             case FRAMEWORK:
+                            case XCFRAMEWORK:
                             case DSYM:
                               return false;
                           }

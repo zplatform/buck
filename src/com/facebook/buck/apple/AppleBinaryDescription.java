@@ -433,6 +433,7 @@ public class AppleBinaryDescription
         Predicates.alwaysTrue(),
         Optional.empty(),
         Optional.empty(),
+        Optional.empty(),
         Optional.empty());
   }
 

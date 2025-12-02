@@ -2376,6 +2376,7 @@ public class ProjectGenerator {
                             case PREFPANE:
                             case XPC:
                             case QLGENERATOR:
+                            case EXTENSION_KIT:
                               // All of the above bundles can have loaders which do not contain
                               // a Swift runtime, so it must get bundled to ensure they run.
                               return true;
@@ -3398,8 +3399,14 @@ public class ProjectGenerator {
         return Optional.empty();
       }
       
-      AppleBundleExtension extension =
-          arg.getExtension().isLeft() ? arg.getExtension().getLeft() : AppleBundleExtension.BUNDLE;
+      Boolean isExtensionKit = arg.getIsExtensionKit().orElse(false);
+      AppleBundleExtension extension = AppleBundleExtension.EXTENSION_KIT;
+      if (isExtensionKit) {
+        extension = AppleBundleExtension.EXTENSION_KIT;
+      } else if (arg.getExtension().isLeft()) {
+        extension = arg.getExtension().getLeft();
+      }
+
       switch (extension) {
         case FRAMEWORK:
           return Optional.of(
@@ -3408,6 +3415,13 @@ public class ProjectGenerator {
         case PLUGIN:
           return Optional.of(
               CopyFilePhaseDestinationSpec.of(PBXCopyFilesBuildPhase.Destination.PLUGINS));
+        case EXTENSION_KIT:
+          return Optional.of(
+              CopyFilePhaseDestinationSpec.of(
+                PBXCopyFilesBuildPhase.Destination.EXTENSION_KIT,
+                Optional.of("$(EXTENSIONS_FOLDER_PATH)")
+              )
+            );
         case PREFPANE:
           return Optional.of(
               CopyFilePhaseDestinationSpec.of(PBXCopyFilesBuildPhase.Destination.RESOURCES));
@@ -4877,6 +4891,7 @@ public class ProjectGenerator {
   /** @return product type of a bundle containing a dylib. */
   private static Optional<ProductType> dylibProductTypeByBundleExtension(
       AppleBundleExtension extension) {
+        LOG.error("vulh> dylibProductTypeByBundleExtension 1");
     switch (extension) {
       case FRAMEWORK:
         return Optional.of(ProductTypes.FRAMEWORK);

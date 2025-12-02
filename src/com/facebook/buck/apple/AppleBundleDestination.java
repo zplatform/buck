@@ -28,6 +28,7 @@ public enum AppleBundleDestination {
   APPCLIPS,
   EXECUTABLES,
   PLUGINS,
+  EXTENSION_KIT,
   XPCSERVICES;
 
   public static AppleBundleDestination defaultValue() {
@@ -48,6 +49,8 @@ public enum AppleBundleDestination {
         return destinations.getAppClipsPath();
       case FRAMEWORKS:
         return destinations.getFrameworksPath();
+      case EXTENSION_KIT:
+        return destinations.getExtensionKitPath();
       case PLUGINS:
         return destinations.getPlugInsPath();
       case XPCSERVICES:

@@ -35,6 +35,7 @@ public class PBXCopyFilesBuildPhase extends PBXBuildPhase {
     PLUGINS(13),
     JAVA_RESOURCES(15),
     PRODUCTS(16),
+    EXTENSION_KIT(16),
     XPC(16),
     QLGENERATOR(16);
 
@@ -68,6 +69,8 @@ public class PBXCopyFilesBuildPhase extends PBXBuildPhase {
           return SHARED_SUPPORT;
         case "plugins":
           return PLUGINS;
+        case "extension_kit":
+          return EXTENSION_KIT;
         case "java_resources":
           return JAVA_RESOURCES;
         case "products":
