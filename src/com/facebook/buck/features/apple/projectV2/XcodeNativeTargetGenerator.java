@@ -1729,6 +1729,7 @@ public class XcodeNativeTargetGenerator {
                               return true;
 
                             case FRAMEWORK:
+                            case XCFRAMEWORK:
                             case DSYM:
                               return false;
                           }

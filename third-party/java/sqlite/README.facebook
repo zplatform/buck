@@ -2,5 +2,10 @@ README for sqlite-jdbc
 
 URL: https://github.com/xerial/sqlite-jdbc/
 Downloaded From:
-  http://central.maven.org/maven2/org/xerial/sqlite-jdbc/3.20.0/
+  https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.49.1.0/
 License: Apache 2.0
+Bumped from 3.20.0 to 3.49.1.0: 3.20.0 predates Mac aarch64 support (added in 3.32.3.3, Dec 2020),
+so `buck build` fails with "No native library is found for os.name=Mac and os.arch=aarch64" on an
+arm64 JVM. 3.49.1.0 ships both org/sqlite/native/Mac/x86_64 and Mac/aarch64; still Java 8 bytecode
+(class file major version 52), so this is a drop-in swap - no source patching needed, unlike the
+JNA/ObjCBridge bumps in the sibling third-party/java directories.

@@ -1,16 +1,29 @@
 Project: Java Objective-C Bridge
-Version: Git revision c38d607820e18bdc607067457ba6680a6277f7cd
-Release Date: Sun Nov 3 19:35:06 2019 +0100
+Version: 1.1 (tag 1.1, official Maven Central GA release - not the 1.1-SNAPSHOT this used to be)
+Release Date: 2022-01-24 (upstream release); rebuilt here 2026-08-10
 Website: https://github.com/shannah/Java-Objective-C-Bridge/
 License: Apache 2.0
 Description: JNA library to allow Java programs to invoke Objective-C APIs
-Instructions:
+Reason for the 1.1-SNAPSHOT -> 1.1 rebuild: the vendored 1.1-SNAPSHOT's libjcocoa.dylib was
+x86_64-only, so it cannot load on an arm64 JVM (see docs/zbuck-audit finding #3 in the zaloapp
+repo). Upstream 1.1 GA ships a universal (x86_64 + arm64) libjcocoa.dylib, but its official jar
+is compiled to Java 11 bytecode - incompatible with this fork's Java 8 runtime. Rebuilt from
+source at tag 1.1 instead of using the official jar directly:
     brew install maven
-    brew install gpg
-    gpg --gen-key
-    git clone https://github.com/shannah/Java-Objective-C-Bridge.git
+    git clone --branch 1.1 --depth 1 https://github.com/shannah/Java-Objective-C-Bridge.git
     cd Java-Objective-C-Bridge
-    Edit pom.xml (or apply patch.diff)
-        Change <maven.compiler.target> to version 8
-        Change <maven.compiler.source> to version 8
-    mvn clean install -Drelease=true
+    Edit pom.xml: replace <maven.compiler.release>11</maven.compiler.release> with
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    Patch two more Java-9+-only usages found by the compiler once targeting 8:
+        - src/main/java/ca/weblite/nativeutils/NativeUtils.java: bare-variable try-with-resources
+          (`try (is; ...)`, Java 9+) and `InputStream.transferTo` (Java 9+) -> rewrote as a
+          manual read/write loop with `is` closed in a finally block.
+        - src/main/java/ca/weblite/objc/Client.java: `list.toArray(Message[]::new)`
+          (the IntFunction-generator toArray overload, Java 11+) -> `list.toArray(new Message[0])`.
+    Also required on this machine: libjcocoa.xcodeproj's MACOSX_DEPLOYMENT_TARGET was 10.13,
+    below the current Xcode SDK's minimum (12.0) - bumped to 12.0 in project.pbxproj.
+    mvn -Drelease=true package -Dmaven.test.skip=true -Dgpg.skip=true
+Result verified: java-objc-bridge-1.1.jar classes are Java 8 bytecode (class file major
+version 52); libjcocoa.dylib (both the one embedded in the jar and the standalone copy in this
+directory) is a universal binary containing x86_64 and arm64 slices.

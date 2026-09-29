@@ -16,6 +16,7 @@
 
 package com.facebook.buck.util.environment;
 
+import com.facebook.buck.core.util.log.Logger;
 import com.facebook.buck.event.AbstractBuckEvent;
 import com.facebook.buck.event.BuckEventBus;
 import com.facebook.buck.event.EventKey;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
 public final class NetworkInfo {
+  private static final Logger LOG = Logger.get(NetworkInfo.class);
   public static class Event extends AbstractBuckEvent {
     Network network;
 
@@ -66,7 +68,14 @@ public final class NetworkInfo {
 
   public static Network getLikelyActiveNetwork() {
     if (ENABLE_OBJC) {
-      return MacNetworkConfiguration.getLikelyActiveNetwork();
+      // The ObjC bridge's native library is not universal/arm64 on every machine (e.g. an
+      // arm64 JVM cannot dlopen an x86_64-only libjcocoa.dylib). This is best-effort telemetry,
+      // so degrade to UNKNOWN instead of taking down the whole command.
+      try {
+        return MacNetworkConfiguration.getLikelyActiveNetwork();
+      } catch (Throwable t) {
+        LOG.warn(t, "Failed to determine active network via ObjC bridge; reporting UNKNOWN");
+      }
     }
     return new Network(NetworkMedium.UNKNOWN);
   }
@@ -74,7 +83,13 @@ public final class NetworkInfo {
   public static Optional<String> getWifiSsid() {
     // TODO(royw): Support Linux and Windows.
     if (ENABLE_OBJC) {
-      return MacWifiSsidFinder.findCurrentSsid();
+      // See getLikelyActiveNetwork() above: same native-library caveat, same degrade-not-crash
+      // handling.
+      try {
+        return MacWifiSsidFinder.findCurrentSsid();
+      } catch (Throwable t) {
+        LOG.warn(t, "Failed to determine wifi SSID via ObjC bridge; reporting none");
+      }
     }
     return Optional.empty();
   }
